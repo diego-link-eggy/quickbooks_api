@@ -7,7 +7,15 @@ class Quickbooks::Parser::QbxmlBase
   QBXML_BASE = Quickbooks::Parser::QbxmlBase
 
   FLOAT_CAST = Proc.new {|d| d ? Float(d) : 0.0}                                  
-  BOOL_CAST  = Proc.new {|d| d ? (d == 'True' ? true : false) : false }          
+  BOOL_CAST  = Proc.new do |value|     
+    if value == true || value =~ (/(true|t|yes|y|1)$/i)
+      true
+    elsif value == false || value.blank? || value =~ (/(false|f|no|n|0)$/i)
+      false
+    else
+      raise ArgumentError.new("invalid value for BOOLTYPE: \"#{value}\"")
+    end
+  end
   DATE_CAST  = Proc.new {|d| d ? Date.parse(d).strftime("%Y-%m-%d") : Date.today.strftime("%Y-%m-%d") } 
   TIME_CAST  = Proc.new {|d| d ? Time.parse(d).xmlschema : Time.now.xmlschema }   
   INT_CAST   = Proc.new {|d| d ? Integer(d.to_i) : 0 }                                 
