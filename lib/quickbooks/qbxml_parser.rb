@@ -10,6 +10,7 @@ class Quickbooks::QbxmlParser
 
   def initialize(schema_type)
     @schema_type = schema_type
+    puts "QbxmlParser.initialize #{schema_type}"
   end
 
   def parse_file(qbxml_file)
