@@ -6,11 +6,9 @@ class Quickbooks::QbxmlParser
   include Quickbooks::Parser::XMLParsing
   include Quickbooks::Support::Inflection
 
-  attr_accessor :schema_type
 
-  def initialize(schema_type)
-    @schema_type = schema_type
-    puts "QbxmlParser.initialize #{schema_type}"
+  def initialize
+    puts "QbxmlParser.initialize"
   end
 
   def parse_file(qbxml_file)

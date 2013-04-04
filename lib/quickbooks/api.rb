@@ -3,33 +3,19 @@ class Quickbooks::API
   include Quickbooks::Config
   include Quickbooks::Support::Inflection
 
-  attr_reader :dtd_parser, :qbxml_parser, :schema_type
+  attr_reader :dtd_parser, :qbxml_parser
   private_class_method :new
-  @@instances = {}
+  @@instance = nil
 
-  def initialize(schema_type = nil, opts = {})
+  def initialize
     @classes_loaded = false
-
-    self.class.check_schema_type!(schema_type)
-    @schema_type = schema_type
-
-    @dtd_parser = Quickbooks::DtdParser.new(schema_type)
-    @qbxml_parser = Quickbooks::QbxmlParser.new(schema_type)
-
-    #load_qb_classes
-    @@instances[schema_type] = self
+    @dtd_parser = Quickbooks::DtdParser.new
+    @qbxml_parser = Quickbooks::QbxmlParser.new
+    @@instance = self
   end
 
-  # simple singleton constructor without caching support
-  #
-  def self.[](schema_type)
-    @@instances[schema_type] || new(schema_type)
-  end
-
-  # full singleton constructor
-  #
-  def self.instance(schema_type = nil, opts = {})
-    @@instances[schema_type] || new(schema_type, opts)
+  def self.instance
+    @@instance || new
   end
 
   # user friendly api decorators. Not used anywhere else.
@@ -103,16 +89,16 @@ private
     end
   end
 
-  # rebuilds schema cache in memory
-  #
+  # rebuilds schema cache in memory - very slow
   def rebuild_schema_cache(force = false)
+    puts "\tCaching schema from DTD file ..."
     dtd_parser.parse_file(dtd_file) if (cached_classes.empty? || force)
   end
 
   # load the recursive container class template into memory (significantly
-  # speeds up wrapping of partial data hashes)
-  # 
+  # speeds up wrapping of partial data hashes) - fast enough
   def load_full_container_template(use_disk_cache = false)
+    puts "\tCaching container template ..."
       container_class.template(true)
   end
 
