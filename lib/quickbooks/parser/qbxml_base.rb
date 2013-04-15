@@ -16,11 +16,11 @@ class Quickbooks::Parser::QbxmlBase
       raise ArgumentError.new("invalid value for BOOLTYPE: \"#{value}\"")
     end
   end
-  DATE_CAST  = Proc.new {|d| d ? Date.parse(d).strftime("%Y-%m-%d") : Date.today.strftime("%Y-%m-%d") } 
-  TIME_CAST  = Proc.new {|d| d ? Time.parse(d).xmlschema : Time.now.xmlschema }   
-  INT_CAST   = Proc.new {|d| d ? Integer(d.to_i) : 0 }                                 
-  STR_CAST   = Proc.new {|d| d ? String(d) : ''}                                  
-  AMT_CAST   = Proc.new {|d| d ?  '%.2f' % (d) : "0.00"}                                  
+  DATE_CAST  = Proc.new {|d| d.present? ? Date.parse(d).strftime("%Y-%m-%d") : Date.today.strftime("%Y-%m-%d") } 
+  TIME_CAST  = Proc.new {|d| d.present? ? Time.parse(d).xmlschema : Time.now.xmlschema }   
+  INT_CAST   = Proc.new {|d| d.present? ? Integer(d.to_i) : 0 }                                 
+  STR_CAST   = Proc.new {|d| d.present? ? String(d) : ''}                                  
+  AMT_CAST   = Proc.new {|d| d.present? ? '%.2f' % d : "0.00"}                                  
 
   QB_TYPE_CONVERSION_MAP= {
     "AMTTYPE"          => AMT_CAST,
