@@ -45,7 +45,6 @@ class Quickbooks::Parser::QbxmlBase
   end
 
   def initialize(params = nil)
-    puts "Quickbooks::Parser::QbxmlBase.initialize"
     return unless params.is_a?(Hash)
     @xml_attributes = params['xml_attributes'] || params[:xml_attributes] || {}
     params.delete('xml_attributes')
