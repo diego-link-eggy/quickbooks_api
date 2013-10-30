@@ -7,7 +7,7 @@ module Quickbooks::Config
 private
 
   def dtd_file
-    "#{XML_SCHEMA_PATH}/qbxmlops70.xml" 
+    "#{XML_SCHEMA_PATH}/qbxmlops120.xml" 
   end
 
   def schema_namespace
